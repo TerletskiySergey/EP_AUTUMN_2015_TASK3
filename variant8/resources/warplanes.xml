@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<planes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://warplanes.org/target warplanes.xsd"
+        xmlns="http://warplanes.org/target">
+    <plane>
+        <model>Grumman_OV-1_Mohawk</model>
+        <origin>USA</origin>
+        <tech-chars>
+            <type>SPY_PLANE</type>
+            <crew>2</crew>
+            <radar avail="true"/>
+            <geom-pars>
+                <length units="meter">12.5</length>
+                <span units="">14.63</span>
+                <height units="meter">3.86</height>
+            </geom-pars>
+        </tech-chars>
+    </plane>
+    <plane>
+        <model>Миг-29</model>
+        <origin>Russia</origin>
+        <tech-chars>
+            <type>FIGHTER</type>
+            <crew>2</crew>
+            <armament>
+                <missile>4</missile>
+            </armament>
+            <radar avail="true"/>
+            <geom-pars>
+                <length units="meter">17.32</length>
+                <span units="meter">11.36</span>
+                <height units="meter">4.73</height>
+            </geom-pars>
+        </tech-chars>
+        <price order="million" currency="thaler">30</price>
+    </plane>
+    <plane>
+        <model>Vought_F-8_Crusader</model>
+        <origin>USA</origin>
+        <tech-chars>
+            <type>FIGHTER</type>
+            <crew>1</crew>
+            <armament>
+                <missile>4</missile>
+            </armament>
+            <radar avail="true"/>
+            <geom-pars>
+                <length units="meter">16.53</length>
+                <span units="meter">6.86 10.87</span>
+                <height units="meter">4.8</height>
+            </geom-pars>
+        </tech-chars>
+    </plane>
+    <plane>
+        <model>F-14D_Super_Tomcat</model>
+        <origin>USA</origin>
+        <tech-chars>
+            <type>INTERCEPTOR</type>
+            <crew>2</crew>
+            <armament>
+                <missile>8</missile>
+            </armament>
+            <radar avail="true"/>
+            <geom-pars>
+                <length units="meter">19.1</length>
+                <span units="meter">11.65 19.45</span>
+                <height units="meter">4.88</height>
+            </geom-pars>
+        </tech-chars>
+        <price order="million" currency="thaler">38</price>
+    </plane>
+</planes>

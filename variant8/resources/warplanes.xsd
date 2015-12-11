@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+        targetNamespace="http://warplanes.org/target" xmlns:trg="http://warplanes.org/target">
+    <!--xmlns:trg1="http://countries.org/target"-->
+    <include schemaLocation="countries.xsd"/>
+    <!--<import schemaLocation="countries.xsd" namespace="http://countries.org/target"/>-->
+    <element name="planes">
+        <complexType>
+            <sequence>
+                <element name="plane" type="trg:planeType" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <simpleType name="unitType">
+        <restriction base="string">
+            <enumeration value="yard"/>
+            <enumeration value="foot"/>
+            <enumeration value="meter"/>
+        </restriction>
+    </simpleType>
+    <complexType name="planeType">
+        <sequence>
+            <element name="model" type="trg:modelType"/>
+            <element name="origin" type="trg:countriesType"/>
+            <element name="tech-chars" type="trg:charsType"/>
+            <element name="price" type="trg:priceType" minOccurs="0"/>
+        </sequence>
+    </complexType>
+    <complexType name="charsType">
+        <sequence>
+            <element name="type">
+                <simpleType>
+                    <restriction base="string">
+                        <enumeration value="CHASE_PLANE"/>
+                        <enumeration value="FIGHTER"/>
+                        <enumeration value="INTERCEPTOR"/>
+                        <enumeration value="SPY_PLANE"/>
+                        <enumeration value="SUPPORT_AIRCRAFT"/>
+                    </restriction>
+                </simpleType>
+            </element>
+            <element name="crew">
+                <simpleType>
+                    <restriction base="positiveInteger">
+                        <minInclusive value="1"/>
+                        <maxInclusive value="2"/>
+                    </restriction>
+                </simpleType>
+            </element>
+            <element name="armament" minOccurs="0">
+                <complexType>
+                    <sequence>
+                        <element name="missile">
+                            <simpleType>
+                                <restriction base="unsignedInt">
+                                    <minInclusive value="0"/>
+                                    <maxInclusive value="10"/>
+                                </restriction>
+                            </simpleType>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="radar">
+                <complexType>
+                    <attribute name="avail" type="boolean"/>
+                </complexType>
+            </element>
+            <element name="geom-pars">
+                <complexType>
+                    <sequence>
+                        <element name="length">
+                            <complexType>
+                                <simpleContent>
+                                    <extension base="trg:unsignedDouble">
+                                        <attribute name="units" use="required" type="trg:unitType"/>
+                                    </extension>
+                                </simpleContent>
+                            </complexType>
+                        </element>
+                        <element name="span">
+                            <complexType>
+                                <simpleContent>
+                                    <extension base="trg:spanType">
+                                        <attribute name="units" use="required" type="trg:unitType"/>
+                                    </extension>
+                                </simpleContent>
+                            </complexType>
+                        </element>
+                        <element name="height">
+                            <complexType>
+                                <simpleContent>
+                                    <extension base="trg:unsignedDouble">
+                                        <attribute name="units" use="required"/>
+                                    </extension>
+                                </simpleContent>
+                            </complexType>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+        </sequence>
+    </complexType>
+    <complexType name="priceType">
+        <simpleContent>
+            <extension base="trg:unsignedDouble">
+                <attribute name="order" use="required">
+                    <simpleType>
+                        <restriction base="string">
+                            <enumeration value="million"/>
+                            <enumeration value="thousand"/>
+                            <enumeration value="hundred"/>
+                        </restriction>
+                    </simpleType>
+                </attribute>
+                <attribute name="currency" fixed="thaler" use="required"/>
+            </extension>
+        </simpleContent>
+    </complexType>
+
+    <simpleType name="modelType">
+        <restriction base="ID">
+            <minLength value="3"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="unsignedDouble">
+        <restriction base="double">
+            <minInclusive value="0"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="spanList">
+        <list itemType="trg:unsignedDouble"/>
+    </simpleType>
+    <simpleType name="spanType">
+        <restriction base="trg:spanList">
+            <minLength value="1"/>
+            <maxLength value="2"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="countriesListTwoLetterAcronyms">
+        <list itemType="trg:countryTypeTwoLettersAcronyms"/>
+    </simpleType>
+    <simpleType name="countriesListThreeLetterAcronyms">
+        <list itemType="trg:countryTypeThreeLettersAcronyms"/>
+    </simpleType>
+    <simpleType name="countriesListEngNotation">
+        <list itemType="trg:countryTypeEngNotation"/>
+    </simpleType>
+    <simpleType name="countriesType">
+        <union memberTypes="trg:countriesListTwoLetterAcronyms
+        trg:countriesListThreeLetterAcronyms
+        trg:countriesListEngNotation"/>
+    </simpleType>
+</schema>
