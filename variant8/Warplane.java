@@ -1,10 +1,25 @@
 package tasks.task3.variant8;
 
+/**
+ * Abstraction of the class represents a warplane.
+ * Instance of the class contains such information about the warplane as:
+ * model, origin, price, technical characteristics.
+ *
+ * @author Sergey Terletskiy
+ * @version 1.0 12/12/2015
+ */
 public class Warplane {
+    /**
+     * Enumerations represents types of warplanes.
+     */
     public enum Type {
         CHASE_PLANE, FIGHTER, INTERCEPTOR, SPY_PLANE, SUPPORT_AIRCRAFT
     }
 
+    /**
+     * Class represents such geometric parameters of a warplane as:
+     * height, length, minimal span, maximal span.
+     */
     public static class GeomParams {
 
         private double height;
@@ -12,9 +27,15 @@ public class Warplane {
         private double maxSpan;
         private double minSpan;
 
+        /**
+         * Constructs a non-initialized instance.
+         */
         public GeomParams() {
         }
 
+        /**
+         * Constructs an initialized instance.
+         */
         public GeomParams(double length, double minSpan, double maxSpan, double height) {
 
             this.length = length;
@@ -67,6 +88,11 @@ public class Warplane {
         }
     }
 
+    /**
+     * Class represents such technical characteristics of a warplane as:
+     * type of plane, crew, missiles quantity, availability of radar,
+     * geometrical parameters.
+     */
     public static class TechChars {
 
         private int crew;
@@ -75,10 +101,16 @@ public class Warplane {
         private boolean radar;
         private Type type;
 
+        /**
+         * Constructs a non-initialized instance.
+         */
         public TechChars() {
             this.geomParams = new GeomParams();
         }
 
+        /**
+         * Constructs initialized instance.
+         */
         public TechChars(Type type, int crew, int missles, boolean radar, GeomParams geomParams) {
 
             this.type = type;
@@ -92,6 +124,10 @@ public class Warplane {
             return crew;
         }
 
+        public void setCrew(int crew) {
+            this.crew = crew;
+        }
+
         public GeomParams getGeomParams() {
             return geomParams;
         }
@@ -100,28 +136,24 @@ public class Warplane {
             return missiles;
         }
 
+        public void setMissiles(int missiles) {
+            this.missiles = missiles;
+        }
+
         public Type getType() {
             return type;
+        }
+
+        public void setType(Type type) {
+            this.type = type;
         }
 
         public boolean isRadar() {
             return radar;
         }
 
-        public void setCrew(int crew) {
-            this.crew = crew;
-        }
-
-        public void setMissiles(int missiles) {
-            this.missiles = missiles;
-        }
-
         public void setRadar(boolean radar) {
             this.radar = radar;
-        }
-
-        public void setType(Type type) {
-            this.type = type;
         }
 
         @Override
@@ -142,10 +174,16 @@ public class Warplane {
     private double price;
     private TechChars techChars;
 
+    /**
+     * Constructs a non-initialized instance.
+     */
     public Warplane() {
         this.techChars = new TechChars();
     }
 
+    /**
+     * Constructs initialized instance.
+     */
     public Warplane(String model, String origin, double price, TechChars techChars) {
         this.model = model;
         this.origin = origin;
@@ -157,28 +195,28 @@ public class Warplane {
         return model;
     }
 
-    public String getOrigin() {
-        return origin;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public TechChars getTechChars() {
-        return techChars;
-    }
-
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public String getOrigin() {
+        return origin;
     }
 
     public void setOrigin(String origin) {
         this.origin = origin;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public TechChars getTechChars() {
+        return techChars;
     }
 
     @Override

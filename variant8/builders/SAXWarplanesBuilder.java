@@ -13,17 +13,47 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.util.EnumSet;
 
+/**
+ * Class provides SAX approach for parsing instances
+ * of Warplane class from XML document.
+ *
+ * @author Sergey Terletskiy
+ * @version 1.0 12/12/2015
+ */
 public class SAXWarplanesBuilder extends AbstractWarplanesBuilder {
 
-    private class WarplanesHandler extends DefaultHandler {
+    /**
+     * Class provides implementation of ContentHandler and ErrorHandler
+     * interfaces.
+     */
+    public static class WarplanesHandler extends DefaultHandler {
 
+        /**
+         * Instance to store parsed Warplane objects in.
+         */
+        private AbstractWarplanesBuilder builder;
+        /**
+         * Set of WarplanesEnum instances, that correspond only to those XML-document elements,
+         * which text content is to be extracted.
+         */
         private EnumSet<WarplanesEnum> constSet;
+
+        /**
+         * Represents an array of attributes, associated with currently processing XML-element.
+         */
         private Attributes curAttr;
+        /**
+         * Represents name of a currently processing XML-element.
+         */
         private WarplanesEnum curElement;
+        /**
+         * Represents currently initializing instance of Warplane class.
+         */
         private Warplane curPlane;
 
-        WarplanesHandler() {
+        public WarplanesHandler(AbstractWarplanesBuilder builder) {
             constSet = EnumSet.range(WarplanesEnum.MODEL, WarplanesEnum.PRICE);
+            this.builder = builder;
         }
 
         @Override
@@ -78,7 +108,7 @@ public class SAXWarplanesBuilder extends AbstractWarplanesBuilder {
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
             if (localName.equals(WarplanesEnum.PLANE.getValue())) {
-                SAXWarplanesBuilder.this.warplanes.add(curPlane);
+                builder.warplanes.add(curPlane);
                 curPlane = null;
                 return;
             }
@@ -120,40 +150,51 @@ public class SAXWarplanesBuilder extends AbstractWarplanesBuilder {
             throw ex;
         }
 
+        /**
+         * Method for conversion of XML-element text content into a double value.
+         * Method is called when element's content interpretation depends on the value
+         * of element's attribute.
+         *
+         * @param dim String content of the XML-element to be converted.
+         *            of the attribute, on which depends the logic of conversion.
+         * @return converted value.
+         */
         private double calcValue(String dim) {
             WarplanesEnum units = WarplanesEnum.fromString(curAttr.getValue(0).trim());
             double res = Double.parseDouble(dim);
-            return convert(res, units);
-        }
-
-        private double footToMeter(double foot) {
-            return foot / 0.3048;
-        }
-
-        private double yardToMeter(double yard) {
-            return yard / 0.9144;
+            return builder.convert(res, units);
         }
     }
 
+    /**
+     * SAX implementation for parsing Warplane class instances from XML-documents without
+     * document validating against XSD-schema.
+     *
+     * @param xmlFilePath XML document file path to be parsed.
+     */
     @Override
     public void buildWarplanesSet(String xmlFilePath) {
         buildWarplanesSet(xmlFilePath, null);
     }
 
+    /**
+     * SAX implementation for parsing Warplane class instances from XML-documents including
+     * document validating against XSD-schema while parsing.
+     *
+     * @param xmlFilePath XML-document file path to be parsed.
+     * @param xsdFilePath XSD-schema file path to be validated according to.
+     */
     @Override
     public void buildWarplanesSet(String xmlFilePath, String xsdFilePath) {
         SAXParserFactory spFactory = SAXParserFactory.newInstance();
         try {
             initSchema(xsdFilePath);
             spFactory.setSchema(schema);
-//            Validator v = schema.newValidator();
-//            v.setErrorHandler(new WarplanesHandler());
-//            v.validate(new StreamSource(xmlFilePath));
             spFactory.setNamespaceAware(true);
             SAXParser parser = spFactory.newSAXParser();
-            parser.parse(xmlFilePath, new WarplanesHandler());
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
+            parser.parse(xmlFilePath, new WarplanesHandler(this));
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            System.err.println(e);
         }
     }
 }

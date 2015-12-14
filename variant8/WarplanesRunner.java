@@ -4,7 +4,7 @@ import tasks.task3.variant8.builders.AbstractWarplanesBuilder;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Properties;
+import java.util.*;
 
 public class WarplanesRunner {
 
@@ -27,8 +27,11 @@ public class WarplanesRunner {
     public static void main(String[] args) {
         String xmlFilePath = prop.getProperty(XML_FILEPATH_PROP);
         String xsdFilePath = prop.getProperty(XSD_FILEPATH_PROP);
-        AbstractWarplanesBuilder builder = WarplanesBuilderFactory.newInstance(WarplanesBuilderFactory.Type.DOM);
+        AbstractWarplanesBuilder builder = WarplanesBuilderFactory.newInstance(WarplanesBuilderFactory.Type.StAX);
         builder.buildWarplanesSet(xmlFilePath, xsdFilePath);
-        System.out.println(builder.getWarplanesSet());
+        List<Warplane> warplanes = new ArrayList<>(builder.getWarplanesSet());
+        Comparator<Warplane> comp = new WarplanesComparator(WarplanesEnum.MODEL);
+        Collections.sort(warplanes, comp);
+        System.out.println(warplanes);
     }
 }

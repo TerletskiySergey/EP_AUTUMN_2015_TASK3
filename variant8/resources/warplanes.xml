@@ -11,7 +11,7 @@
             <radar avail="true"/>
             <geom-pars>
                 <length units="meter">12.5</length>
-                <span units="">14.63</span>
+                <span units="meter">14.63</span>
                 <height units="meter">3.86</height>
             </geom-pars>
         </tech-chars>

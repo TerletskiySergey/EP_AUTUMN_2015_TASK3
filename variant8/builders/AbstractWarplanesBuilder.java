@@ -11,21 +11,65 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Abstract class providing an interface for parsing instances
+ * of Warplane class from XML document.
+ *
+ * @author Sergey Terletskiy
+ * @version 1.0 12/12/2015
+ */
 public abstract class AbstractWarplanesBuilder {
 
-    protected Set<Warplane> warplanes;
+    /**
+     * Schema instance that is used for XML validating against XSD schema.
+     */
     protected Schema schema;
+    /**
+     * Collection of parsed Warplane class instances.
+     */
+    protected Set<Warplane> warplanes;
 
-    protected void initSchema(String xsdFilePath) throws SAXException {
-        if (xsdFilePath == null) {
-            this.schema = null;
-            return;
-        }
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        schema = schemaFactory.newSchema(new File(xsdFilePath));
+    public AbstractWarplanesBuilder() {
+        this.warplanes = new HashSet<>();
     }
 
-    protected double convert(double val, WarplanesEnum type){
+    /**
+     * Abstract method to parse Warplane class instances from XML-documents without
+     * document validating against XSD-schema.
+     *
+     * @param xmlFilePath XML document file path to be parsed.
+     */
+    public abstract void buildWarplanesSet(String xmlFilePath);
+
+    /**
+     * Abstract method to parse Warplane class instances from XML-documents including
+     * document validating against XSD-schema while parsing.
+     *
+     * @param xmlFilePath XML-document file path to be parsed.
+     * @param xsdFilePath XSD-schema file path to be validated according to.
+     */
+    public abstract void buildWarplanesSet(String xmlFilePath, String xsdFilePath);
+
+    /**
+     * Method to receive parsed Warplane class instances.
+     *
+     * @return Set of parsed warplane instances.
+     */
+    public Set<Warplane> getWarplanesSet() {
+        return this.warplanes;
+    }
+
+    /**
+     * Utility method used for conversion of input double value.
+     * Logic of conversion depends on the value of WarplanesEnum.
+     * Method is helpful while parsing values required for Warplane
+     * class instances initialization.
+     *
+     * @param val  value to be converted.
+     * @param type enumeration value, that determines the logic of conversion.
+     * @return converted double value.
+     */
+    protected double convert(double val, WarplanesEnum type) {
         switch (type) {
             case METER:
                 return val;
@@ -44,23 +88,44 @@ public abstract class AbstractWarplanesBuilder {
         }
     }
 
+    /**
+     * Utility method used for conversion of input double value in foot units into
+     * meter units. Method is helpful while parsing values required for
+     * Warplane class instances initialization.
+     *
+     * @param foot value to be converted.
+     * @return converted double value.
+     */
     protected double footToMeter(double foot) {
         return foot / 0.3048;
     }
 
+
+    /**
+     * Initializes private Schema field, that is used for validation of
+     * XML document against XSD schema.
+     *
+     * @param xsdFilePath XSD schema file path.
+     * @throws SAXException if the initialization wasn't successful.
+     */
+    protected void initSchema(String xsdFilePath) throws SAXException {
+        if (xsdFilePath == null) {
+            this.schema = null;
+            return;
+        }
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        schema = schemaFactory.newSchema(new File(xsdFilePath));
+    }
+
+    /**
+     * Utility method used for conversion of input double value in yard units into
+     * meter units. Method is helpful while parsing values required for
+     * Warplane class instances initialization.
+     *
+     * @param yard value to be converted.
+     * @return converted double value.
+     */
     protected double yardToMeter(double yard) {
         return yard / 0.9144;
-    }
-
-    public AbstractWarplanesBuilder() {
-        this.warplanes = new HashSet<>();
-    }
-
-    public abstract void buildWarplanesSet(String xmlFilePath);
-
-    public abstract void buildWarplanesSet(String xmlFilePath, String xsdFilePath);
-
-    public Set<Warplane> getWarplanesSet() {
-        return this.warplanes;
     }
 }
